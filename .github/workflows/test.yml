@@ -29,7 +29,3 @@ jobs:
       - name: テストを実行
         run: bin/rails test
 
-      # 初回のみ: CI で解決した Gemfile.lock をリポジトリに取り込むためにログへ出す
-      - name: Gemfile.lock を表示
-        if: always()
-        run: echo "----BEGIN LOCK----" && cat Gemfile.lock && echo "----END LOCK----"
