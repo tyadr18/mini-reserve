@@ -1,0 +1,27 @@
+<% content_for :title, "予約の詳細" %>
+
+<h1>予約の詳細</h1>
+
+<dl class="detail">
+  <dt>来店日時</dt>
+  <dd><%= format_reserved_at(@reservation) %></dd>
+
+  <dt><%= Reservation.human_attribute_name(:customer_name) %></dt>
+  <dd><%= @reservation.customer_name %></dd>
+
+  <dt><%= Reservation.human_attribute_name(:contact) %></dt>
+  <dd><%= @reservation.contact %></dd>
+
+  <dt><%= Reservation.human_attribute_name(:party_size) %></dt>
+  <dd><%= @reservation.party_size %>名</dd>
+
+  <dt><%= Reservation.human_attribute_name(:note) %></dt>
+  <dd><%= @reservation.note.present? ? simple_format(@reservation.note) : "なし" %></dd>
+</dl>
+
+<div class="actions">
+  <%= link_to "編集", edit_reservation_path(@reservation), class: "button" %>
+  <%= link_to "この日の予約一覧", reservations_path(date: @reservation.reserved_on) %>
+  <%= button_to "削除", @reservation, method: :delete, class: "danger",
+        form: { onsubmit: "return confirm('この予約を削除しますか？');" } %>
+</div>

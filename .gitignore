@@ -1,0 +1,21 @@
+/.bundle
+/vendor/bundle
+
+# SQLite のデータベースファイル
+/storage/*
+!/storage/.keep
+
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+
+# 環境変数ファイル（サンプルの .env.example だけをコミットする）
+/.env
+/.env.*
+!/.env.example
+
+/config/master.key
+/config/credentials/*.key
+
+.DS_Store

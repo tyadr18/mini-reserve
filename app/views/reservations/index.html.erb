@@ -1,0 +1,64 @@
+<% content_for :title, "予約一覧" %>
+
+<h1>予約一覧</h1>
+
+<%= form_with url: reservations_path, method: :get, class: "filter" do |f| %>
+  <%= f.label :date, "日付で絞り込む" %>
+  <%= f.date_field :date, value: @date %>
+  <%= f.submit "表示", name: nil %>
+  <% if @date %>
+    <%= link_to "絞り込みを解除", reservations_path %>
+  <% end %>
+<% end %>
+
+<% if @date %>
+  <h2><%= l(@date, format: :long) %> の空き状況</h2>
+  <table class="slots">
+    <thead>
+      <tr><th>時間枠</th><th>予約人数</th><th>残り</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% Reservation::TIME_SLOTS.each do |slot| %>
+        <% booked = @booked_party_sizes.fetch(slot, 0) %>
+        <% remaining = (Reservation.slot_capacity - booked).clamp(0..) %>
+        <tr class="<%= "full" if remaining.zero? %>">
+          <td><%= slot %></td>
+          <td><%= booked %> / <%= Reservation.slot_capacity %>名</td>
+          <td><%= remaining.zero? ? "満席" : "#{remaining}名" %></td>
+          <td>
+            <% if remaining.positive? %>
+              <%= link_to "この枠で予約", new_reservation_path(reservation: { reserved_on: @date, time_slot: slot }) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<h2><%= @date ? "#{l(@date, format: :long)} の予約" : "今日以降の予約" %>（<%= @reservations.size %>件）</h2>
+
+<% if @reservations.empty? %>
+  <p class="empty">予約はありません。</p>
+<% else %>
+  <table class="reservations">
+    <thead>
+      <tr><th>日付</th><th>時間枠</th><th>お客様名</th><th>人数</th><th>連絡先</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% @reservations.each do |reservation| %>
+        <tr id="<%= dom_id(reservation) %>">
+          <td><%= l(reservation.reserved_on) %></td>
+          <td><%= reservation.time_slot %></td>
+          <td><%= reservation.customer_name %></td>
+          <td><%= reservation.party_size %>名</td>
+          <td><%= reservation.contact %></td>
+          <td class="actions">
+            <%= link_to "詳細", reservation %>
+            <%= link_to "編集", edit_reservation_path(reservation) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

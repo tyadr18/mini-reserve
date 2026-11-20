@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+# 初回セットアップ: gem のインストールと開発用データベースの準備を行います。
+require "fileutils"
+
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+FileUtils.chdir APP_ROOT do
+  puts "== gem をインストールします =="
+  system("bundle check") || system!("bundle install")
+
+  puts "\n== データベースを準備します（作成・マイグレーション・サンプルデータ投入） =="
+  system! "bin/rails db:prepare"
+
+  puts "\n== 完了しました。`bin/rails server` で起動できます =="
+end

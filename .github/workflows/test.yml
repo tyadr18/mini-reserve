@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      CI: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: テスト用データベースを準備
+        run: bin/rails db:test:prepare
+
+      - name: テストを実行
+        run: bin/rails test
+
+      # 初回のみ: CI で解決した Gemfile.lock をリポジトリに取り込むために保存する
+      - name: Gemfile.lock を保存
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemfile-lock
+          path: Gemfile.lock

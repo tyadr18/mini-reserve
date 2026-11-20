@@ -1,0 +1,48 @@
+<%= form_with model: reservation, class: "reservation-form" do |form| %>
+  <% if reservation.errors.any? %>
+    <div class="errors" role="alert">
+      <p>入力内容を確認してください（<%= reservation.errors.count %>件）</p>
+      <ul>
+        <% reservation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :customer_name %>
+    <%= form.text_field :customer_name, required: true, maxlength: Reservation::CUSTOMER_NAME_MAX_LENGTH, autocomplete: "name" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact %>
+    <%= form.text_field :contact, required: true, maxlength: Reservation::CONTACT_MAX_LENGTH, placeholder: "090-1234-5678 または name@example.com" %>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :reserved_on %>
+      <%= form.date_field :reserved_on, required: true, min: Date.current %>
+    </div>
+
+    <div class="field">
+      <%= form.label :time_slot %>
+      <%= form.select :time_slot, Reservation::TIME_SLOTS, { include_blank: "選択してください" }, required: true %>
+    </div>
+
+    <div class="field">
+      <%= form.label :party_size %>
+      <%= form.number_field :party_size, required: true, min: 1, max: Reservation.max_party_size %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :note %>
+    <%= form.text_area :note, rows: 3, maxlength: Reservation::NOTE_MAX_LENGTH %>
+  </div>
+
+  <p class="hint">1つの時間枠の定員は<%= Reservation.slot_capacity %>名、1件の予約は<%= Reservation.max_party_size %>名までです。</p>
+
+  <%= form.submit reservation.new_record? ? "予約を登録する" : "変更を保存する" %>
+<% end %>

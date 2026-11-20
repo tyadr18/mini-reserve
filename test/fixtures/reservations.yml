@@ -1,0 +1,34 @@
+# 名前・連絡先はすべて架空のものです。
+# time_slot は必ず文字列で書く（クォートしないと YAML が 12:00 を数値として読む）
+
+# 7日後 12:00 の枠に合計 7名（定員10名なので残り3名）
+lunch_yamada:
+  customer_name: 山田 太郎
+  contact: 090-0000-0001
+  reserved_on: <%= Date.current + 7 %>
+  time_slot: "12:00"
+  party_size: 4
+
+lunch_sato:
+  customer_name: 佐藤 花子
+  contact: hanako@example.com
+  reserved_on: <%= Date.current + 7 %>
+  time_slot: "12:00"
+  party_size: 3
+  note: アレルギー対応の相談あり
+
+# 8日後 18:00
+dinner_suzuki:
+  customer_name: 鈴木 一郎
+  contact: 03-0000-0000
+  reserved_on: <%= Date.current + 8 %>
+  time_slot: "18:00"
+  party_size: 2
+
+# すでに来店済みの過去の予約
+past_tanaka:
+  customer_name: 田中 次郎
+  contact: jiro@example.com
+  reserved_on: <%= Date.current - 3 %>
+  time_slot: "19:00"
+  party_size: 2

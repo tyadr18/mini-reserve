@@ -1,0 +1,20 @@
+# SQLite を使います。データベースファイルは storage/ に作られます。
+default: &default
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  timeout: 5000
+  # トランザクション開始時点で書き込みロックを取る。
+  # 定員チェックと保存の間に別の予約が割り込むのを防ぐため（README「工夫点」参照）
+  default_transaction_mode: immediate
+
+development:
+  <<: *default
+  database: storage/development.sqlite3
+
+test:
+  <<: *default
+  database: storage/test.sqlite3
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_PATH", "storage/production.sqlite3") %>
