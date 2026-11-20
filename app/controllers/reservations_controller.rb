@@ -57,7 +57,8 @@ class ReservationsController < ApplicationController
 
   # ?reservation=xxx のように形の違う値が来ても 500 にならないよう、permit してから取り出す
   def prefill_params
-    params.permit(reservation: %i[reserved_on time_slot]).fetch(:reservation, {}).to_h.symbolize_keys
+    prefill = params.permit(reservation: %i[reserved_on time_slot])[:reservation]
+    prefill ? prefill.to_h.symbolize_keys : {}
   end
 
   # "2026-12-01" 形式の文字列を Date にする。空なら nil、不正な形式なら注意を出して nil

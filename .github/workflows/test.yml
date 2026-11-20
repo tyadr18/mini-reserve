@@ -16,7 +16,7 @@ jobs:
       CI: "true"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -29,10 +29,7 @@ jobs:
       - name: テストを実行
         run: bin/rails test
 
-      # 初回のみ: CI で解決した Gemfile.lock をリポジトリに取り込むために保存する
-      - name: Gemfile.lock を保存
+      # 初回のみ: CI で解決した Gemfile.lock をリポジトリに取り込むためにログへ出す
+      - name: Gemfile.lock を表示
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gemfile-lock
-          path: Gemfile.lock
+        run: echo "----BEGIN LOCK----" && cat Gemfile.lock && echo "----END LOCK----"
